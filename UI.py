@@ -7,8 +7,7 @@ from StreamManager import (
 )
 
 # Directory paths
-image_path = Path("C:\\Users\\Fxnarji\\Pictures\\UniligaStuff\\Maps\\Formatted")
-hero_icon_path = Path("C:\\Users\\Fxnarji\\Pictures\\UniligaStuff\\Heroes")
+from paths import image_path, hero_icon_path
 
 # Roles
 roles = ["Tank", "Damage", "Support"]
