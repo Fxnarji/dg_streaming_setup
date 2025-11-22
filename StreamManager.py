@@ -2,6 +2,7 @@ import os
 from obswebsocket import obsws, requests
 from pathlib import Path
 from paths import image_path, hero_icon_path
+import pyperclip
 
 HOST = "localhost"
 PORT = 4455
@@ -29,6 +30,9 @@ map_names = {
     "0016.png": "NewJunkCity",
     "0017.png": "Suravasa",
 }
+
+# Track selected map files per round
+selected_maps = {i+1: None for i in range(len(maps))}
 
 
 
@@ -62,8 +66,11 @@ def set_map(map_index, map_file):
             inputName=maps[map_index - 1],
             inputSettings={"file": os.path.join(image_path, map_file)}
         ))
+        # Store the chosen map
+        selected_maps[map_index] = map_file
     finally:
         ws.disconnect()
+
 
 
 def update_match_points():
@@ -194,6 +201,35 @@ def ban_hero(role, hero, map_index, team):
         bans[map_index][team].add(hero)
     finally:
         ws.disconnect()
+
+def print_info():
+    num_rounds = len(scores["Elysium"])
+    string = "**Elysium vs Opponent**\n"
+    for round_num in range(1, num_rounds + 1):
+
+        map_file = selected_maps.get(round_num)
+        if not map_file:
+            continue  # skip rounds with no map set
+
+        map_name = map_names.get(map_file, "Unknown")
+
+        round = f"{map_name}: []\n"
+        string += round
+
+        # Scores
+        ely_score = scores["Elysium"][round_num]
+        opp_score = scores["Opponent"][round_num]
+        score_string = f"{ely_score} : {opp_score}\n"
+        string += score_string
+
+        # Bans (as comma-separated lists for readability)
+        ely_bans = ", ".join(bans[round_num]["Elysium"]) or "None"
+        opp_bans = ", ".join(bans[round_num]["Opponent"]) or "None"
+        bans_string = f"Bans: {ely_bans}, {opp_bans}\n\n"
+        string += bans_string
+    
+    print(string)
+    pyperclip.copy(string)
 
 
 def unban_hero(hero, map_index, team):

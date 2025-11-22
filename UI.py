@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from StreamManager import (
     set_map, reset, maps, Path, scores, increment_score,
-    ban_hero, unban_hero, bans,toggle_map_win, map_names
+    ban_hero, unban_hero, bans,toggle_map_win, map_names, print_info
 )
 
 # Directory paths
@@ -178,16 +178,9 @@ for i, map_name in enumerate(maps, start=1):
     # Initial color update
     update_winner_colors()
 
-
-
-
     # --- Ban Section Buttons ---
     tk.Button(tab, text="Elysium Bans", command=lambda idx=i: open_ban_window(idx, "Elysium"), bg="#f0a500").pack(pady=10)
     tk.Button(tab, text="Opponent Bans", command=lambda idx=i: open_ban_window(idx, "Opponent"), bg="#f0a500").pack(pady=10)
-
-
-
-
 
 # Reset all maps button at bottom
 reset_btn = tk.Button(root, text="Reset All Maps", command=reset, bg="#f08080")
@@ -207,6 +200,9 @@ def setup_windows():
 
 setup_btn = tk.Button(root, text="Setup Layout", command=setup_windows, bg="#00aaff", fg="white")
 setup_btn.pack(pady=10, fill="x", padx=20)
+
+tk.Button(root, text="Print Results", command=print_info, bg="#02f54b", fg="white").pack(pady=10, fill="x", padx=20)
+
 
 
 root.mainloop()
